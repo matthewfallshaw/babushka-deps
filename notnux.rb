@@ -1,6 +1,7 @@
 dep 'notnux' do
+  requires 'home'
   requires 'GitX.app'
-  requires 'dotfiles'
+end
 
 dep 'bootstrap', :github_user, :repo do
   github_user.default!('matthewfallshaw')
