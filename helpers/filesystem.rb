@@ -45,3 +45,38 @@ meta :directory do
     end
   end
 end
+
+meta :github do
+  accepts_value_for :github_user, "matthewfallshaw"
+  accepts_value_for :repo, :basename
+  accepts_value_for :local_path
+
+  template do
+    met? {
+      xlocal_path = local_path ? local_path : "~/code" / repo
+      Babushka::GitRepo.repo_for(xlocal_path.p)
+    }
+    meet {
+      xlocal_path = local_path ? local_path : "~/code" / repo
+      git "https://github.com/#{github_user}/#{repo}", :to => xlocal_path.p
+    }
+  end
+end
+
+meta :symlink do
+  accepts_value_for :source
+  accepts_value_for :dest
+
+  template do
+    setup do
+      if dest.p.directory? && ! dest.p.empty?
+        unmeetable! "#{dest} exists. Remove it so I can replace it with a link to #{source}."
+      end
+    end
+    met? { dest.p.symlink_to?(source.p) }
+    meet do
+      rm dest if dest.exist?
+      ln_s source, dest  #, :force => true
+    end
+  end
+end

@@ -1,10 +1,10 @@
 dep 'home' do
   requires 'dotfiles'
-  # requires 'library symlinks'
+  requires 'library symlinks'
 end
 
 dep 'dotfiles' do
-  requires 'dotfiles repo'
+  requires 'dotfiles.github'
 
   met? {
     ignore_list = %w[install.rb Rakefile README vendor lib tags]
@@ -23,19 +23,5 @@ dep 'dotfiles' do
   }
 end
 
-dep 'dotfiles repo', :github_user, :repo do
-  requires 'home code.directory'
-
-  github_user.default!('matthewfallshaw')
-  repo.default!('dotfiles')
-
-  met? {
-    Babushka::GitRepo.repo_for("~/code" / repo)
-  }
-  meet {
-    git "https://github.com/#{github_user}/#{repo}", :to => "~/code" / repo
-  }
-end
-
+dep "dotfiles.github"
 dep 'home code.directory'
-
