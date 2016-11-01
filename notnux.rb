@@ -1,3 +1,5 @@
+require 'fileutils'
+
 dep 'notnux' do
   requires 'home'
   requires 'GitX.app'
@@ -12,7 +14,10 @@ dep 'bootstrap', :github_user, :repo do
       (Babushka::WORKING_PREFIX / "deps").symlink_to?(Babushka::WORKING_PREFIX / "sources/#{github_user}")
   end
   meet do
-    git "https://github.com/#{github_user}/#{repo}", :to => Babushka::WORKING_PREFIX / "sources/#{github_user}"
-    ln_s Babushka::WORKING_PREFIX / "sources/#{github_user}", Babushka::WORKING_PREFIX / "deps", :force => true
+    git "https://github.com/#{github_user}/#{repo}",
+      :to => Babushka::WORKING_PREFIX / "sources/#{github_user}"
+    FileUtils.ln_s((Babushka::WORKING_PREFIX / "sources/#{github_user}").to_s,
+                   (Babushka::WORKING_PREFIX / "deps").to_s,
+                   :force => true)
   end
 end
