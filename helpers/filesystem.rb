@@ -2,15 +2,14 @@ require 'fileutils'
 
 def rm(list, options = {})
   if list.is_a?(Array)
-    list.collect! {|item| item.is_a?(Fancypath) ? item.to_s : item }
+    list.collect! {|item| item.p.to_s }
+  else
+    list = list.p.to_s
   end
   FileUtils.rm list, options
 end
 def ln_s(src, dest, options = {})
-  [src, dest].each do |arg|
-    arg = arg.to_s if arg.is_a?(Fancypath)
-  end
-  FileUtils.ln_s(src, dest, options)
+  FileUtils.ln_s(src.p.to_s, dest.p.to_s, options)
 end
 
 class Fancypath
@@ -75,7 +74,7 @@ meta :symlink do
     end
     met? { dest.p.symlink_to?(source.p) }
     meet do
-      rm dest if dest.exist?
+      rm dest if dest.p.exist?
       ln_s source, dest  #, :force => true
     end
   end
