@@ -2,7 +2,6 @@ require 'fileutils'
 
 dep 'notnux' do
   requires 'home'
-  requires 'GitX.app'
 end
 
 dep 'bootstrap', :github_user, :repo do
